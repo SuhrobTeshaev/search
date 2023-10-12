@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import logo from './logo.svg';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import './style.css';
 import { Query, User, requestUsers, requestUsersWithError } from './api';
 import { error } from 'console';
-
+import SearchUsers from './components/SearchUsers';
+import Users from './components/Users';
+import SelectLimit from './components/SelectLimit';
+import Pagination from './components/Pagination';
 function App() {
   const [filterParams,setFilterParams]=useState<Query>({
     name:'',
@@ -34,9 +37,60 @@ function App() {
     })
   },[filterParams]);
   
+  const updateValueSearch = useCallback(
+    debounce((field: string, value: string) => {
+      setFilterParams((prev) => ({ ...prev, [field]: value, offset: 0 }));
+      setPage(1);
+    }, 500),
+    []
+  );
+
+  const changeValueHandler = (
+    field: string,
+    event: React.ChangeEvent<HTMLInputElement>,
+    setData: (str: string) => void
+  ) => {
+    setData(event.target.value);
+    updateValueSearch(field, event.target.value);
+  };
+  const changePages = (direction:'prev'|'next')=>{
+    setPage((prev)=>(direction==='next'?prev+1:prev-1));
+    setFilterParams((prev)=>({
+      ...prev,
+      offset:(refPage.current-1)*filterParams.limit
+    }));
+
+    const changeLimit = (e:React.ChangeEvent<HTMLSelectElement>) => {
+      setFilterParams((prev) => ({
+        ...prev,
+        limit: parseInt(e.target.value),
+        offset: (refPage.current - 1) * parseInt(e.target.value)
+      }));
+    };
+    
+  }
   return (
     <div className="App">
-      
+      <SearchUsers changeValueHandler={changeValueHandler}/>
+      {isLoading?(
+        <h2>Идет загрузка...</h2>
+      ):isError?(
+        <div>{isError}</div>
+      ):(
+        <Users usersProp={users}/>
+      )}
+      <div style={{
+        display:'flex',
+        justifyContent:'space-between',
+        alignItems:"center"
+      }}>
+        <SelectLimit limit={filterParams.limit} onLimitValue={changeLimit}/>
+        <Pagination  
+        page={page}
+        onPageValue={changePages}
+        isPrevDisabled={page<=1}
+        isNextDisabled={page-1===Math.floor(11/filterParams.limit)} />
+      </div>
     </div>
   );
 }
