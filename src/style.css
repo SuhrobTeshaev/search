@@ -32,10 +32,31 @@
     min-height: 100vh;
     padding: 0 16px;
   }
-  
+  .App {
+   
+      position: absolute;
+      transform: translate(-50%,-50%);
+      top: 50%;
+      left: 50%;
+      background: rgb(158, 238, 221);
+      padding: 3em;
+      height: 320px;
+      border-radius: 20px;
+      border-left: 1px solid white;
+      border-top: 1px solid white;
+      backdrop-filter: blur(10px);
+      box-shadow: 20px 20px 40px -6px rgba(0,0,0,0.2);
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+      
+  }
+
   h1 {
     font-size: 3.2em;
     line-height: 1.1;
+  }
+  li {
+    list-style: none;
   }
   
   button {
@@ -66,3 +87,48 @@
     border-radius: 4px;
   }
   
+  input {
+    background: transparent;
+    width: 200px;
+    padding: 1em;
+    margin-bottom: 2em;
+    border: none;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-radius: 5000px;
+    backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px rgba(0,0,0,0.2);
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+    /* &:hover {
+      background: rgba(255,255,255,0.1);
+      box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+    }
+    
+    &[type="email"],
+    &[type="password"] {
+      
+      &:focus {
+        background: rgba(255,255,255,0.1);
+        box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+      }
+    }
+    
+    &[type="button"] {
+      margin-top: 10px;
+      width: 150px;
+      font-size: 1rem;
+      
+      &:hover {
+        cursor: pointer;
+      }
+      
+      &:active {
+        background: rgba(255,255,255,0.2);
+      }
+    }
+  } */
