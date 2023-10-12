@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-
-import './style.css';
 import { Query, User, requestUsers, requestUsersWithError } from './api';
-import { error } from 'console';
 import SearchUsers from './components/SearchUsers';
 import Users from './components/Users';
 import SelectLimit from './components/SelectLimit';
 import Pagination from './components/Pagination';
+import { debounce } from 'lodash';
+import './style.css';
+
 function App() {
   const [filterParams,setFilterParams]=useState<Query>({
     name:'',
@@ -53,6 +53,15 @@ function App() {
     setData(event.target.value);
     updateValueSearch(field, event.target.value);
   };
+
+  const changeLimit = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterParams((prev) => ({
+      ...prev,
+      limit: parseInt(e.target.value),
+      offset: (refPage.current - 1) * parseInt(e.target.value)
+    }));
+  };
+
   const changePages = (direction:'prev'|'next')=>{
     setPage((prev)=>(direction==='next'?prev+1:prev-1));
     setFilterParams((prev)=>({
@@ -60,13 +69,7 @@ function App() {
       offset:(refPage.current-1)*filterParams.limit
     }));
 
-    const changeLimit = (e:React.ChangeEvent<HTMLSelectElement>) => {
-      setFilterParams((prev) => ({
-        ...prev,
-        limit: parseInt(e.target.value),
-        offset: (refPage.current - 1) * parseInt(e.target.value)
-      }));
-    };
+    
     
   }
   return (
